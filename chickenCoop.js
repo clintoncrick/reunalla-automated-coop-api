@@ -7,6 +7,8 @@ module.exports = function() {
     this.wakeUp = function() {
         console.log('[CHICKEN COOP]: Waking up the chicken coop!');
         this.cleanup();
+
+        coopDoor.open();
     }
 
     this.cleanup = function() {
