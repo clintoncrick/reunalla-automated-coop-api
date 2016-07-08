@@ -1,2 +1,5 @@
-# reunalla-automated-coop
-An automated chicken coop
+*********************
+Reunalla Automated Coop
+*********************
+
+Our initial attempt at automating a chicken coop.

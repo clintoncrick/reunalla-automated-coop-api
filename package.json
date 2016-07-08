@@ -1,0 +1,14 @@
+{
+  "name": "reunalla-automated-coop",
+  "version": "1.0.0",
+  "description": "Initial framework for our automated chicken coop",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "onoff": "^1.0.3"
+  }
+}
