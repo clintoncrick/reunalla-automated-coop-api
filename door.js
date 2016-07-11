@@ -6,16 +6,18 @@ function Door(name) {
     var door = {};
     door.__proto__ = BaseObject(name);
 
-    var motor = new Motor(19, 26);
+    var motor = new Motor('motor', 19, 26);
     door.registerItem(motor);
 
-    var topSensor = new Sensor(6, 'in', 'both');
+    var topSensor = new Sensor('top-sensor', 'gpio', 6, 'in', 'both');
+    topSensor.sensor.setActiveLow(true);
     door.registerItem(topSensor);
-
-    var bottomSensor = new Sensor(5, 'in', 'both');
+    
+    var bottomSensor = new Sensor('bottom-sensor', 'gpio', 5, 'in', 'both');
+    bottomSensor.sensor.setActiveLow(true);
     door.registerItem(bottomSensor);
 
-    
+
     door.open = function() {
         console.log('[DOOR]: opening door');
         motor.up();
@@ -33,20 +35,29 @@ function Door(name) {
 
     door.registerAction('wakeup', function() {
         console.log('[DOOR]: Watching sensors');
-        
+
         function handleSensorChange(_name) {
             var name = (typeof _name != 'undefined' ? '[' + _name + ' SENSOR]:' : '');
             return function(err, value) {
-                console.log(name, 'Updating sensor to: ' + value);
-
-                if (!value) {
+                if (value) {
+                    console.log(name, 'triggered. Stopping door.');
                     door.stop();
                 }
             }
         }
-
+        
         topSensor.sensor.watch(handleSensorChange('TOP'));
         bottomSensor.sensor.watch(handleSensorChange('BOTTOM'));
+    });
+
+    door.registerAction('getStatus', function() {
+        return {
+            status: {
+                isOpen: topSensor.sensor.readSync(),
+                isClosed: bottomSensor.sensor.readSync(),
+                isStuck: (!topSensor.sensor.readSync() && !bottomSensor.sensor.readSync()) * 1
+            }
+        };
     });
 
     return door;

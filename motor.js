@@ -1,9 +1,9 @@
 var Gpio = require('onoff').Gpio;
 var BaseObject = require('./baseObject.js');
 
-function Motor(pin1, pin2) {
+function Motor(name, pin1, pin2) {
     var motor = {};
-    motor.__proto__ = BaseObject('Motor');
+    motor.__proto__ = BaseObject(name);
 
     var Pin1 = new Gpio(pin1, 'out');
     var Pin2 = new Gpio(pin2, 'out');
@@ -32,6 +32,14 @@ function Motor(pin1, pin2) {
 
     motor.registerAction('wakeup', motor.cleanup);
     motor.registerAction('cleanup', motor.cleanup);
+    motor.registerAction('getStatus', function(){
+        return {
+            status: {
+                Pin1 : Pin1.readSync(),
+                Pin2 : Pin2.readSync()
+            }
+        }
+    });
     
     return motor;
 }
