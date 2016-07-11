@@ -1,19 +1,22 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
-module.exports = function(_options) {
+var BaseObject = require('./baseObject.js');
+
+function Camera(name) {
+    var camera = {};
+    camera.__proto__ = BaseObject(name);
+
     var defaultOutput = './camera/latest.jpg';
-
-    this.takePhoto = function(_dest) {
-    	var output = _dest || defaultOutput;
-
+    camera.takePhoto = function(_dest) {
+        var output = _dest || defaultOutput;
         try {
             doesFileExist = fs.lstatSync(output);
         } catch (e) {
             //create it if it doesn't!;
             console.log('[CAMERA]: output does not exist. creating it.');
-            fs.writeFile(output, '', function(){});
+            fs.writeFile(output, '', function() {});
         }
-        
+
         console.log('[CAMERA]: taking photo');
         var cmd = 'raspistill -vf -hf -o ' + output;
         exec(cmd, function(error, stdout, stderr) {
@@ -21,4 +24,7 @@ module.exports = function(_options) {
             console.log('[CAMERA]: photo finished');
         });
     }
-};
+
+    return camera;
+}
+module.exports = Camera;

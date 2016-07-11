@@ -1,21 +1,27 @@
+var BaseObject = require('./baseObject.js');
 var Door = require('./door.js');
 var Camera = require('./camera.js');
-module.exports = function() {
-    var coopDoor = new Door();
-    var camera = new Camera();
 
-    this.wakeUp = function() {
-        console.log('[CHICKEN COOP]: Waking up the chicken coop!');
-        this.cleanup();
+function ChickenCoop() {
+    var coop = {};
+    coop.__proto__ = BaseObject('Coop');
 
-        coopDoor.open();
+    var door = new Door('door');
+    coop.registerItem(door);
+
+    var camera = new Camera('camera');
+    coop.registerItem(camera);
+
+    coop.takePhoto = function(_dest) {
+        camera.takePhoto(_dest);
     }
 
-    this.cleanup = function() {
-    	coopDoor.cleanup();
-    }
-    
-    this.takePhoto = function(_dest){
-    	camera.takePhoto(_dest);
-    }
-};
+    coop.registerAction('wakeup', function(){
+        console.log('[COOP]: Waking up the coop!');
+        coop.takePhoto();
+    });
+
+    return coop;
+}
+
+module.exports = ChickenCoop;

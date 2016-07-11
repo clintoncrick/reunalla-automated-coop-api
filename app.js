@@ -1,4 +1,3 @@
 var ChickenCoop = require('./chickenCoop.js');
-var coop = new ChickenCoop();
-coop.wakeUp();
-
+var coop = ChickenCoop();
+coop.wakeup();
