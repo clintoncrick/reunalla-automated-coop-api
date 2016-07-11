@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-dht-sensor": "0.0.12",
     "onoff": "^1.1.1"
   }
 }
