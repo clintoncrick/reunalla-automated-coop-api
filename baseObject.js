@@ -27,9 +27,7 @@ function BaseObject(name) {
         return function() {
             if (bo.hasItems()) {
                 Object.keys(bo.items).forEach(function(k) {
-                    if (typeof k != ' undefined') {
-                        bo.items[k].executeAction(actionName);
-                    }
+                    bo.items[k].executeAction(actionName);
                 });
             }
 
@@ -46,7 +44,7 @@ function BaseObject(name) {
     bo.wakeup   = bo.executeAction('wakeup');
     bo.cleanup  = bo.executeAction('cleanup');
 
-    
+
     bo.getStatus = function() {
         var status = {};
         Object.keys(items).forEach(function(k, item) {
