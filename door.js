@@ -45,17 +45,22 @@ function Door(name) {
                 }
             }
         }
-        
+
         topSensor.sensor.watch(handleSensorChange('TOP'));
         bottomSensor.sensor.watch(handleSensorChange('BOTTOM'));
     });
 
     door.registerAction('getStatus', function() {
+        var motorStatus = motor.getStatus();
+        var opening = motorStatus.status.Pin1;
+        var closing = motorStatus.status.Pin2;
         return {
             status: {
                 isOpen: topSensor.sensor.readSync(),
                 isClosed: bottomSensor.sensor.readSync(),
-                isStuck: (!topSensor.sensor.readSync() && !bottomSensor.sensor.readSync()) * 1
+                isStuck: (!opening && !closing && !topSensor.sensor.readSync() && !bottomSensor.sensor.readSync()) * 1,
+                isOpening: opening,
+                isClosing: closing
             }
         };
     });

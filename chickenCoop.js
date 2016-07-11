@@ -17,7 +17,7 @@ function ChickenCoop() {
     coop.registerItem(camera);
 
     coop.takePhoto = function(_dest) {
-        camera.takePhoto(_dest);
+        return camera.takePhoto(_dest);
     }
 
     coop.registerAction('wakeup', function() {
