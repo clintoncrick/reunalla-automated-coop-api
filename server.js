@@ -25,6 +25,15 @@ router.get('/', function(req, res) {
     res.json(failure);
 });
 
+
+router.get('/latestPhoto', function(req, res){
+	coop.takePhoto();
+	var duration = 6200;
+	var newTime = Date.now() + duration;
+	while(Date.now() < newTime + duration){}
+	res.sendfile('./camera/latest.jpg');
+});
+
 router.get('/coop', function(req, res){
 	res.json(coop.getStatus());
 });

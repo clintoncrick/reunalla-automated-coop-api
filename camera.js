@@ -17,11 +17,11 @@ function Camera(name) {
             fs.writeFile(output, '', function() {});
         }
 
-        console.log('[CAMERA]: taking photo');
+        console.log('[CAMERA]: taking photo - ' + Date.now());
         var cmd = 'raspistill -vf -hf -o ' + output;
         exec(cmd, function(error, stdout, stderr) {
             // command output is in stdout
-            console.log('[CAMERA]: photo finished');
+            console.log('[CAMERA]: photo finished - ' + Date.now());
         });
     }
 
