@@ -22,7 +22,8 @@ function ChickenCoop() {
 
     coop.registerAction('wakeup', function() {
         console.log('[COOP]: Waking up the coop!');
-        coop.takePhoto();
+        //coop.takePhoto();
+        camera.startStream();
     });
 
     // coop.registerAction('getStatus', function(){

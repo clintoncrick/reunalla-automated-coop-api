@@ -27,11 +27,11 @@ router.get('/', function(req, res) {
 
 
 router.get('/latestPhoto', function(req, res){
-	coop.takePhoto();
-	var duration = 6200;
-	var newTime = Date.now() + duration;
-	while(Date.now() < newTime + duration){}
-	res.sendfile('./camera/latest.jpg');
+	// coop.takePhoto();
+	// var duration = 6200;
+	// var newTime = Date.now() + duration;
+	// while(Date.now() < newTime + duration){}
+	res.sendfile('/tmp/stream/pic.jpg');
 });
 
 router.get('/coop', function(req, res){
