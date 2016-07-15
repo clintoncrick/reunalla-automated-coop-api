@@ -31,7 +31,7 @@ router.get('/latestPhoto', function(req, res){
 	// var duration = 6200;
 	// var newTime = Date.now() + duration;
 	// while(Date.now() < newTime + duration){}
-	res.sendfile('/tmp/stream/pic.jpg');
+	res.sendFile('/tmp/stream/pic.jpg');
 });
 
 router.get('/coop', function(req, res){
@@ -53,10 +53,14 @@ router.get('/coop/items/:item_name', function(req, res){
 });
 
 
+// router.get('/coop/items/camera/takePhoto', function(req, res){
+// 	coop.items['camera'].takePhoto();
+// 	res.sendFile('/tmp/stream/pic.jpg');
+// });
+
 router.get('/coop/items/:item_name/:action', function(req, res){
 	var item = coop.items[req.params.item_name];
 	if(item && item[req.params.action] && typeof item[req.params.action] == 'function'){
-		var response = 
 		res.json(item[req.params.action]() || success);
 	}
 	else {
