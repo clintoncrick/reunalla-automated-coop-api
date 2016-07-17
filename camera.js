@@ -26,12 +26,7 @@ function Camera(name) {
             }
 
             if (camera.streaming) {
-                //@TODO: move this kill function to a smaller function;
-                console.log('[CAMERA]: stopping camera...' + camera.processes.camera.pid);
-                if (camera.processes.camera) {
-                    kill(camera.processes.camera.pid + 1);
-                    console.log('[CAMERA]: camera stopped');
-                }
+                camera.stopCamera();
             }
 
             var cmd = 'raspistill -vf -hf -w 1600 -h 1200 -q 35  --nopreview -o ' + camera.streaming_directory + '/pic.jpg';
@@ -42,8 +37,7 @@ function Camera(name) {
                 } else {
                     console.log('[CAMERA]: photo finished - ' + Date.now());
                 }
-
-
+                
                 //@TODO: move/copy from tmp to _dest;
                 if (camera.streaming) {
                     camera.restartCameraStream(true);
@@ -77,29 +71,38 @@ function Camera(name) {
 
         camera.processes.cameraMonitor = setTimeout(function() {
             camera.restartCameraStream();
-        }, camera.streaming_t);
+        }, camera.streaming_t - 200);
     }
 
-    camera.stopStream = function() {
+    camera.stopCamera = function() {
         console.log('[CAMERA]: stopping camera...');
         if (camera.processes.camera) {
             kill(camera.processes.camera.pid + 1);
             console.log('[CAMERA]: camera stopped');
         }
+    }
 
-        console.log('[CAMERA]: stopping stream...');
-        if (camera.processes.stream) {
-            kill(camera.processes.stream.pid + 1);
-            console.log('[CAMERA]: stream stopped');
-        }
-
+    camera.stopCameraMonitor = function() {
         console.log('[CAMERA]: stopping the camera monitor...');
         if (camera.processes.cameraMonitor) {
             clearTimeout(camera.processes.cameraMonitor);
             camera.processes.cameraMonitor = false;
             console.log('[CAMERA]: camera monitor');
         }
+    }
 
+    camera.stopStream = function(){
+        console.log('[CAMERA]: stopping stream...');
+        if (camera.processes.stream) {
+            kill(camera.processes.stream.pid + 1);
+            console.log('[CAMERA]: stream stopped');
+        }
+    }
+
+    camera.turnOffStream = function() {
+        camera.stopCamera();
+        camera.stopStream();
+        camera.stopCameraMonitor();
         camera.streaming = false;
     }
 
