@@ -25,6 +25,7 @@ function Camera(name) {
                 fs.writeFile(output, '', function() {});
             }
 
+            //If we're streaming, pause the camera;
             if (camera.streaming) {
                 camera.stopCamera();
             }
@@ -37,8 +38,8 @@ function Camera(name) {
                 } else {
                     console.log('[CAMERA]: photo finished - ' + Date.now());
                 }
-                
-                //@TODO: move/copy from tmp to _dest;
+
+                //@TODO: move/copy the new picture from tmp to _dest;
                 if (camera.streaming) {
                     camera.restartCameraStream(true);
                 }
@@ -112,4 +113,5 @@ function Camera(name) {
 
     return camera;
 }
+
 module.exports = Camera;
