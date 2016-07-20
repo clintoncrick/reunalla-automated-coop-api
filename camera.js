@@ -61,16 +61,19 @@ function Camera(name) {
             execSync('mkdir ' + camera.streaming_directory);
             execSync('sudo chmod 777 ' + camera.streaming_directory);
         }
-
+        camera.stopCamera();
         camera.processes.camera = exec('raspistill -vf -hf --nopreview -w 770 -h 578 -q 10 -o ' + camera.streaming_directory + '/pic.jpg -tl 100 -t ' + camera.streaming_t + ' -th 0:0: > /dev/null 2>&1 &', function(error, stdout, stderr) {
             if (!restart) {
+                camera.stopStream();
                 camera.processes.stream = exec('mjpg_streamer -i "input_file.so -f ' + camera.streaming_directory + ' -n pic.jpg" -o "output_http.so -w /usr/local/www -p 8090" > /dev/null 2>&1 &', function(error, stdout, stderr) {});
             }
         });
 
         camera.streaming = true;
 
+        camera.stopCameraMonitor();
         camera.processes.cameraMonitor = setTimeout(function() {
+            console.log('[CAMERA]: restarting camera stream from monitor;');
             camera.restartCameraStream();
         }, camera.streaming_t - 200);
     }
@@ -79,7 +82,17 @@ function Camera(name) {
         console.log('[CAMERA]: stopping camera...');
         if (camera.processes.camera) {
             kill(camera.processes.camera.pid + 1);
+            camera.processes.camera = undefined;
             console.log('[CAMERA]: camera stopped');
+        }
+    }
+
+    camera.stopStream = function() {
+        console.log('[CAMERA]: stopping stream...');
+        if (camera.processes.stream) {
+            kill(camera.processes.stream.pid + 1);
+            camera.processes.stream = undefined;
+            console.log('[CAMERA]: stream stopped');
         }
     }
 
@@ -88,18 +101,10 @@ function Camera(name) {
         if (camera.processes.cameraMonitor) {
             clearTimeout(camera.processes.cameraMonitor);
             camera.processes.cameraMonitor = false;
-            console.log('[CAMERA]: camera monitor');
+            console.log('[CAMERA]: camera monitor stopped');
         }
     }
-
-    camera.stopStream = function(){
-        console.log('[CAMERA]: stopping stream...');
-        if (camera.processes.stream) {
-            kill(camera.processes.stream.pid + 1);
-            console.log('[CAMERA]: stream stopped');
-        }
-    }
-
+    
     camera.turnOffStream = function() {
         camera.stopCamera();
         camera.stopStream();
@@ -110,6 +115,18 @@ function Camera(name) {
     camera.restartCameraStream = function() {
         camera.startStream(true);
     }
+
+    camera.registerAction('getStatus', function() {
+        return {
+            status: {
+                isStreaming: camera.streaming,
+                pids: {
+                    camera: camera.processes && camera.processes.camera && camera.processes.camera.pid ? camera.processes.camera.pid : false,
+                    stream: camera.processes && camera.processes.stream && camera.processes.stream.pid ? camera.processes.stream.pid : false
+                }
+            }
+        }
+    });
 
     return camera;
 }

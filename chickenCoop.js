@@ -9,7 +9,7 @@ function ChickenCoop() {
 
     var door = new Door('door');
     coop.registerItem(door);
-
+    
     var temperatureSensor = new Sensor('temperature-sensor', 'dht', 16);
     coop.registerItem(temperatureSensor);
 
