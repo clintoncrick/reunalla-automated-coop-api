@@ -2,6 +2,7 @@ var BaseObject = require('./baseObject.js');
 var Door = require('./door.js');
 var Camera = require('./camera.js');
 var Sensor = require('./sensor.js');
+var Monitor = require('./monitor.js');
 
 function ChickenCoop() {
     var coop = {};
@@ -20,19 +21,23 @@ function ChickenCoop() {
         return camera.takePhoto(_dest);
     }
 
+    var monitor = new Monitor('monitor', 'mongo', coop);
+    coop.registerItem(monitor);
+
     coop.registerAction('wakeup', function() {
         console.log('[COOP]: Waking up the coop!');
         //coop.takePhoto();
         camera.startStream();
     });
 
-    // coop.registerAction('getStatus', function(){
-    //     return {
-    //         status: {
-    //             isDoorOpen: door.getStatus().status.isOpen
-    //         }
-    //     }
-    // });
+    coop.registerAction('getStatus', function(){
+        return {
+            timestamp: Date.now(),
+            status: {
+                //isDoorOpen: door.getStatus().status.isOpen
+            }
+        }
+    });
 
     return coop;
 }

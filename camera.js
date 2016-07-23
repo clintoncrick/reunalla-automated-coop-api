@@ -7,11 +7,20 @@ var BaseObject = require('./baseObject.js');
 
 function Camera(name) {
     var camera = {};
+    camera.init = true;
+    camera.lastPhotoTimestamp = false;
     camera.streaming = false;
     camera.streaming_directory = '/tmp/stream';
+    camera.streaming_file = camera.streaming_directory + '/pic.jpg';
     camera.streaming_t = 9999999;
     camera.processes = {};
     camera.__proto__ = BaseObject(name);
+
+    //Let's watch the expected output:
+    fs.watchFile(camera.streaming_file, { interval: 1000 }, function() {
+        camera.lastPhotoTimestamp = Date.now();
+    });
+
 
     var defaultOutput = './camera/latest.jpg';
     camera.takePhoto = function(_dest) {
@@ -30,7 +39,7 @@ function Camera(name) {
                 camera.stopCamera();
             }
 
-            var cmd = 'raspistill -vf -hf -w 1600 -h 1200 -q 35  --nopreview -o ' + camera.streaming_directory + '/pic.jpg';
+            var cmd = 'raspistill -vf -hf -w 1600 -h 1200 -q 35  --nopreview -o ' + camera.streaming_file;
             camera.processes.camera = exec(cmd, function(error, stdout, stderr) {
                 if (error) {
                     console.log('[CAMERA]: photo ERROR - ' + Date.now());
@@ -51,6 +60,8 @@ function Camera(name) {
         //Streaming install and setup found here:
         //http://blog.cudmore.io/post/2015/03/15/Installing-mjpg-streamer-on-a-raspberry-pi/
         var restart = _restart || false;
+        var init = true;
+
         console.log('[CAMERA]: Starting stream @ :8090');
 
         try {
@@ -61,21 +72,33 @@ function Camera(name) {
             execSync('mkdir ' + camera.streaming_directory);
             execSync('sudo chmod 777 ' + camera.streaming_directory);
         }
-        camera.stopCamera();
+
+        if (restart || camera.streaming) {
+            camera.stopCamera();
+        }
+
         camera.processes.camera = exec('raspistill -vf -hf --nopreview -w 770 -h 578 -q 10 -o ' + camera.streaming_directory + '/pic.jpg -tl 100 -t ' + camera.streaming_t + ' -th 0:0: > /dev/null 2>&1 &', function(error, stdout, stderr) {
             if (!restart) {
-                camera.stopStream();
-                camera.processes.stream = exec('mjpg_streamer -i "input_file.so -f ' + camera.streaming_directory + ' -n pic.jpg" -o "output_http.so -w /usr/local/www -p 8090" > /dev/null 2>&1 &', function(error, stdout, stderr) {});
+
+                if (camera.streaming && !camera.init) {
+                    camera.stopStream();
+                }
+                camera.processes.stream = exec('mjpg_streamer -i "input_file.so -f ' + camera.streaming_directory + ' -n pic.jpg" -o "output_http.so -w /usr/local/www -p 8090" > /dev/null 2>&1 &', function(error, stdout, stderr) {
+                    camera.init = false;
+                });
             }
         });
 
-        camera.streaming = true;
-
-        camera.stopCameraMonitor();
+        if (camera.streaming) {
+            camera.stopCameraMonitor();
+        }
         camera.processes.cameraMonitor = setTimeout(function() {
             console.log('[CAMERA]: restarting camera stream from monitor;');
             camera.restartCameraStream();
         }, camera.streaming_t - 200);
+
+
+        camera.streaming = true;
     }
 
     camera.stopCamera = function() {
@@ -104,7 +127,7 @@ function Camera(name) {
             console.log('[CAMERA]: camera monitor stopped');
         }
     }
-    
+
     camera.turnOffStream = function() {
         camera.stopCamera();
         camera.stopStream();
@@ -119,6 +142,7 @@ function Camera(name) {
     camera.registerAction('getStatus', function() {
         return {
             status: {
+                lastPhotoTimestamp: camera.lastPhotoTimestamp,
                 isStreaming: camera.streaming,
                 pids: {
                     camera: camera.processes && camera.processes.camera && camera.processes.camera.pid ? camera.processes.camera.pid : false,
