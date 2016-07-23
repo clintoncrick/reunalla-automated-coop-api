@@ -7,19 +7,19 @@ The backend for our initial attempt at automating a chicken coop. Meant as eithe
 ## Usage
 
 To start:
-	`sudo node server.js`
+`sudo node server.js`
 
 To access general status:
-	http://localhost:8080/api/coop
+http://localhost:8080/api/coop
 
 To access individual item statuses:
-	http://localhost:8080/api/coop/items/<ITEM NAME>
+http://localhost:8080/api/coop/items/<ITEM NAME>
 
 To call individual item actions:
-	http://localhost:8080/api/coop/items/<ITEM NAME>/<ACTION>
+http://localhost:8080/api/coop/items/<ITEM NAME>/<ACTION>
 
 To get an array of previous statuses:
-	http://localhost:8080/api/coop/items/monitor/getItems
+http://localhost:8080/api/coop/items/monitor/getItems
 
 
 ## Requirements
