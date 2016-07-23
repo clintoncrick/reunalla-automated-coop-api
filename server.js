@@ -1,6 +1,6 @@
-var express = require('express'); // call express
-var app = express(); // define our app using express
-var port = process.env.PORT || 8080; // set our port
+var express = require('express');       // call express
+var app = express();                    // define our app using express
+var port = process.env.PORT || 8080;    // set our port
 
 
 //Get our chicken coop and wake it up;
