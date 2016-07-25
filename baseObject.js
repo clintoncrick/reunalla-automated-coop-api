@@ -4,32 +4,32 @@ function BaseObject(name, options) {
 
     //-----Items
     bo.items = {};
-    bo.registerItem = function(item) {
+    bo._registerItem = function(item) {
         bo.items[item.name] = item;
     }
-    bo.hasItems = function() {
+    bo._hasItems = function() {
         return Object.keys(bo.items).length;
     }
 
-
     //-----Actions
     bo.actions = {};
-    bo.registerAction = function(actionName, callback) {
+    bo._registerAction = function(actionName, callback) {
         if (typeof bo.actions[actionName] == 'undefined') {
             bo.actions[actionName] = [];
         }
         bo.actions[actionName].push(callback);
     }
 
-    bo.executeAction = function(actionName, defaultCallback) {
+    //Recursively execute this action name;
+    bo._executeAction = function(actionName, defaultCallback) {
         return function() {
             var response = {
                 name: bo.name
-                //items: []     // Conditionally adding this later;
+                    //items: []     // Conditionally adding this later;
             };
 
             //If we have items, call their actionName object and capture the results;
-            if (bo.hasItems()) {
+            if (bo._hasItems()) {
                 response.items = [];
                 Object.keys(bo.items).forEach(function(k) {
                     if (typeof bo.items[k][actionName] == 'function') {
@@ -53,11 +53,23 @@ function BaseObject(name, options) {
         }
     }
 
+    bo.getActions = function() {
+        var actions = [];
+        for (var p in this) {
+            if (typeof this[p] == 'function' && p[0] != '_') {
+                actions.push(p);
+            }
+        }
+
+
+        return actions;
+    }
+
     //Base methods;
-    bo.init     = bo.executeAction('init');
-    bo.wakeup   = bo.executeAction('wakeup');
-    bo.cleanup  = bo.executeAction('cleanup');
-    bo.getStatus = bo.executeAction('getStatus', function(){
+    bo.init = bo._executeAction('init');
+    bo.wakeup = bo._executeAction('wakeup');
+    bo.cleanup = bo._executeAction('cleanup');
+    bo.getStatus = bo._executeAction('getStatus', function() {
         return {
             status: {}
         }

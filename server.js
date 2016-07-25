@@ -60,7 +60,8 @@ router.get('/coop/items/:item_name', function(req, res) {
 router.get('/coop/items/:item_name/:action/:arguments?', function(req, res) {
     var item = coop.items[req.params.item_name];
     if (item && item[req.params.action] && typeof item[req.params.action] == 'function') {
-        var actionResponse = item[req.params.action].call(this, req.params.arguments);
+        var actionResponse = item[req.params.action].call(item, req.params.arguments);
+        console.log(actionResponse);
         Promise.resolve(actionResponse).then(function(value) {
         	res.json(value || success);
         })

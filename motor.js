@@ -30,9 +30,9 @@ function Motor(name, pin1, pin2) {
         console.log('[MOTOR]: cleanup completed.');
     }
 
-    motor.registerAction('wakeup', motor.cleanup);
-    motor.registerAction('cleanup', motor.cleanup);
-    motor.registerAction('getStatus', function(){
+    motor._registerAction('wakeup', motor.cleanup);
+    motor._registerAction('cleanup', motor.cleanup);
+    motor._registerAction('getStatus', function(){
         return {
             status: {
                 Pin1 : Pin1.readSync(),

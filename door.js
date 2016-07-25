@@ -7,15 +7,15 @@ function Door(name) {
     door.__proto__ = BaseObject(name);
 
     var motor = new Motor('motor', 19, 26);
-    door.registerItem(motor);
+    door._registerItem(motor);
 
     var topSensor = new Sensor('top-sensor', 'gpio', 6, 'in', 'both');
     topSensor.sensor.setActiveLow(true);
-    door.registerItem(topSensor);
+    door._registerItem(topSensor);
     
     var bottomSensor = new Sensor('bottom-sensor', 'gpio', 5, 'in', 'both');
     bottomSensor.sensor.setActiveLow(true);
-    door.registerItem(bottomSensor);
+    door._registerItem(bottomSensor);
 
 
     door.open = function() {
@@ -33,7 +33,7 @@ function Door(name) {
         motor.stop();
     }
 
-    door.registerAction('wakeup', function() {
+    door._registerAction('wakeup', function() {
         console.log('[DOOR]: Watching sensors');
 
         function handleSensorChange(_name) {
@@ -50,7 +50,7 @@ function Door(name) {
         bottomSensor.sensor.watch(handleSensorChange('BOTTOM'));
     });
 
-    door.registerAction('getStatus', function() {
+    door._registerAction('getStatus', function() {
         var motorStatus = motor.getStatus();
         var opening = motorStatus.status.Pin1;
         var closing = motorStatus.status.Pin2;

@@ -56,13 +56,13 @@ function Monitor(name, type, itemToMonitor) {
             break;
     }
 
-    monitor.registerAction('wakeup', function() {
+    monitor._registerAction('wakeup', function() {
         monitor.saveFunction();
         monitor.monitorProcess = setInterval(monitor.saveFunction, monitor.frequency);
     });
 
     
-    // monitor.registerAction('getStatus', function() {
+    // monitor._registerAction('getStatus', function() {
     //     var status = {
     //         status: {}
     //     };

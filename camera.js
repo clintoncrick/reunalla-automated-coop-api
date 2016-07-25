@@ -139,7 +139,7 @@ function Camera(name) {
         camera.startStream(true);
     }
 
-    camera.registerAction('getStatus', function() {
+    camera._registerAction('getStatus', function() {
         return {
             status: {
                 lastPhotoTimestamp: camera.lastPhotoTimestamp,

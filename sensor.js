@@ -22,7 +22,7 @@ function Sensor(name, type, pin, setting, direction) {
             sensor.sensor = new Gpio(pin, setting, direction);
             break;
     }
-    sensor.registerAction('getStatus', function() {
+    sensor._registerAction('getStatus', function() {
         var status = { status: {} };
         status.status.sensor = sensor.sensor.readSync();
         return status;

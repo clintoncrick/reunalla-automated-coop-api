@@ -9,28 +9,28 @@ function ChickenCoop() {
     coop.__proto__ = BaseObject('Coop');
 
     var door = new Door('door');
-    coop.registerItem(door);
+    coop._registerItem(door);
     
     var temperatureSensor = new Sensor('temperature-sensor', 'dht', 16);
-    coop.registerItem(temperatureSensor);
+    coop._registerItem(temperatureSensor);
 
     var camera = new Camera('camera');
-    coop.registerItem(camera);
+    coop._registerItem(camera);
 
     coop.takePhoto = function(_dest) {
         return camera.takePhoto(_dest);
     }
 
     var monitor = new Monitor('monitor', 'mongo', coop);
-    coop.registerItem(monitor);
+    coop._registerItem(monitor);
 
-    coop.registerAction('wakeup', function() {
+    coop._registerAction('wakeup', function() {
         console.log('[COOP]: Waking up the coop!');
         //coop.takePhoto();
         camera.startStream();
     });
 
-    coop.registerAction('getStatus', function(){
+    coop._registerAction('getStatus', function(){
         return {
             timestamp: Date.now(),
             status: {
