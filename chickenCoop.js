@@ -6,7 +6,7 @@ var Monitor = require('./monitor.js');
 
 function ChickenCoop() {
     var coop = {};
-    coop.__proto__ = BaseObject('Coop');
+    Object.setPrototypeOf(coop, BaseObject('Coop'));
 
     var door = new Door('door');
     coop._registerItem(door);

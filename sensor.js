@@ -4,9 +4,10 @@ var BaseObject = require('./baseObject.js');
 
 function Sensor(name, type, pin, setting, direction) {
     var sensor = {}
-    var isDHTSensor = false;
-    sensor.__proto__ = BaseObject(name);
+    Object.setPrototypeOf(sensor, BaseObject(name));
 
+
+    var isDHTSensor = false;
     switch (type) {
         case 'dht':
             isDHTSensor = true;

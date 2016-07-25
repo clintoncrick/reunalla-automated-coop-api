@@ -4,7 +4,7 @@ var Sensor = require('./sensor.js');
 
 function Door(name) {
     var door = {};
-    door.__proto__ = BaseObject(name);
+    Object.setPrototypeOf(door, BaseObject(name));
 
     var motor = new Motor('motor', 19, 26);
     door._registerItem(motor);

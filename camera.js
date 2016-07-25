@@ -14,7 +14,9 @@ function Camera(name) {
     camera.streaming_file = camera.streaming_directory + '/pic.jpg';
     camera.streaming_t = 9999999;
     camera.processes = {};
-    camera.__proto__ = BaseObject(name);
+
+    Object.setPrototypeOf(camera, BaseObject(name));
+    
 
     //Let's watch the expected output:
     fs.watchFile(camera.streaming_file, { interval: 1000 }, function() {

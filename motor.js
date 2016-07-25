@@ -3,7 +3,7 @@ var BaseObject = require('./baseObject.js');
 
 function Motor(name, pin1, pin2) {
     var motor = {};
-    motor.__proto__ = BaseObject(name);
+    Object.setPrototypeOf(motor, BaseObject(name));
 
     var Pin1 = new Gpio(pin1, 'out');
     var Pin2 = new Gpio(pin2, 'out');

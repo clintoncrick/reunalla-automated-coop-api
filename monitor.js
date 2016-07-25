@@ -7,13 +7,15 @@ var ObjectId = require('mongodb').ObjectID;
 
 function Monitor(name, type, itemToMonitor) {
     var monitor = {};
+    Object.setPrototypeOf(monitor, BaseObject(name));
+    
     monitor.type = '';
     monitor.saveFunction = function() {};
     monitor.getItems = function() {
         return [];
     };
     monitor.frequency = 1800000; // in MS;
-    monitor.__proto__ = BaseObject(name);
+    
 
     // //TOCLEAR THE MONITOR LOGs;
     // monitor.url = 'mongodb://localhost:27017/chickenCoop';
