@@ -1,4 +1,5 @@
 var express = require('express');       // call express
+var cors = require('cors');             // cors!
 var app = express();                    // define our app using express
 var port = process.env.PORT || 8080;    // set our port
 
@@ -73,6 +74,7 @@ router.get('/coop/items/:item_name/:action/:arguments?', function(req, res) {
 
 //Register the routes;
 app.use('/api', router);
+app.use(cors());
 
 //Fire it up!;
 app.listen(port);

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.7.1",
     "mongodb": "^2.2.4",
     "node-dht-sensor": "0.0.12",
     "onoff": "^1.1.1",

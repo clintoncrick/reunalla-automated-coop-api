@@ -26,6 +26,9 @@ function Sensor(name, type, pin, setting, direction) {
     sensor._registerAction('getStatus', function() {
         var status = { status: {} };
         status.status.sensor = sensor.sensor.readSync();
+        if(typeof status.status.sensor.temperature != 'undefined'){
+            status.status.sensor.temperature = status.status.sensor.temperature * 1.8 + 32;
+        }
         return status;
     });
     return sensor;
