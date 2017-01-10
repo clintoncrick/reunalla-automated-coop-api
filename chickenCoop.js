@@ -21,8 +21,8 @@ function ChickenCoop() {
         return camera.takePhoto(_dest);
     }
 
-    var monitor = new Monitor('monitor', 'mongo', coop);
-    coop._registerItem(monitor);
+//    var monitor = new Monitor('monitor', 'mongo', coop);
+//    coop._registerItem(monitor);
 
     coop._registerAction('wakeup', function() {
         console.log('[COOP]: Waking up the coop!');
